@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
+    <title>welcome to D3.js</title>
+    
+</head>
+<body>
+    <svg width="960" height="600"></svg>
+    
+    <script>
+
+        // 比例尺的使用， 是映射关系
+
+        /**
+        let dataset = [1,2,3,4,5,6,7];
+
+        let min = d3.min(dataset);
+        let max = d3.max(dataset);
+
+        let scaleLinear = d3.scaleLinear().domain([min, 4, max]).range([0, 100, 300]);
+
+        document.write(scaleLinear(1.03));
+        d3.select("body").append("br");//换行
+        document.write(scaleLinear(7));
+        d3.select("body").append("br");//换行
+        document.write(scaleLinear(4.045))
+        */
+
+        /**
+        const color = ['blue1', 'green1', 'red1', 'black1', 'white1'];
+        const index = [0,1,2,3,4];
+
+        const scaleOrdinal = d3.scaleOrdinal().domain(index).range(color);
+
+        document.write(scaleOrdinal(3));
+        d3.select("body").append("br");//换行
+        */
+        
+
+        const marge ={ top: 60, bottom: 60, left: 60, right: 60 };
+
+        const dataset = [2.5, 2.1, 1.7, 1.3, 0.9];
+
+        const scaleLinear = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([0,300]);
+
+        const svg = d3.select('svg');
+
+        const g = svg.append('g')
+            .attr('transform', `translate(${marge.left}, ${marge.top})`)
+
+        const rectHeight = 30;
+
+        g.selectAll('rect').data(dataset).enter().append('rect')
+            .attr('x', 20)
+            .attr('y', function(d,i){
+                return i*rectHeight;
+            })
+            .attr('width', function(d){
+                return scaleLinear(d);
+            })
+            .attr('height', rectHeight -5)
+            .attr('fill', '#123456')
+
+
+        
+
+
+
+    </script>
+  </body>
+</html>

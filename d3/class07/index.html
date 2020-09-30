@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
+    <title>welcome to D3.js</title>
+    
+</head>
+<body>
+    <svg width="960" height="600"></svg>
+    
+    <script>
+
+        dataset = [1,2,3,4,5,6,7];
+
+        const rectHeight = 30;
+
+        const xScale = d3.scaleLinear()
+            .domain([0, d3.max(dataset)])
+            .range([0, 300])
+
+        // d定义一个坐标轴
+        const xAxis = d3.axisBottom(xScale)
+            .ticks(7);
+
+        const svg = d3.select('svg');
+
+        const g = svg
+            .append('g')
+            .attr('transform', `translate(60, 60)`)
+
+        g.selectAll('rect')
+            .data(dataset)
+            .enter()
+            .append('rect')
+            .attr('x', 0)
+            .attr('y', function(d, i){
+                return i * rectHeight;
+            })
+            .attr('width', function(d) {
+                return xScale(d);
+            })
+            .attr('height', rectHeight -5)
+            .attr('fill', '#abcdef');
+
+        g.append('g').call(xAxis)
+        .attr('transform', `translate(0, ${rectHeight * dataset.length})`)
+        .attr('color', '#abcdef')
+
+    </script>
+  </body>
+</html>
