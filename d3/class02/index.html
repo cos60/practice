@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
+    <title>welcome to D3.js</title>
+    
+</head>
+<body>
+
+    <p></p>
+    <p></p>
+    <p></p>
+    <p></p>
+
+    <script>
+
+        // 绑定元素 datum
+            // let str = 'you are a boy';
+            // let p = d3.select('body').selectAll('p');
+
+            // p.datum(str).text(function(d, i) {
+            //     return `第${i}：${d}`
+            // })
+
+        // 绑定元素data
+
+        let arr = ['dog', 'cat'];
+        
+        let p = d3.select('body').selectAll('p');
+
+        let update = p.data(arr);
+
+        let enter = update.enter();
+
+        update.text(function (d,i){
+            return `第${i}: ${d}`;
+        })
+
+        // let append = enter.append('h1').style('color','red');
+
+        // append.text(function(d,i){
+        //     return `第${i}:${d}`
+        // })
+
+        let exit = update.exit();
+
+        exit.text(function(d,i) {
+            return `${i}:0:${d}`
+        } ).style('color', 'red')
+
+
+
+
+
+
+    </script>
+    
+</body>
+</html>
