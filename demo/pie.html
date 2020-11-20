@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script>
+    <title>D3 demo</title>
+</head>
+<body>
+    <svg></svg>
+    <script>
+        let svg = d3.select('svg')
+            .attr('width',600)
+            .attr('height',600);
+        let g = svg.append('g')
+            // 不进行这块
+            .attr('transform', `translate(160, 160)`);
+        const dataset = [
+            { label: 'js', value: 10 },
+            { label: 'css', value: 6 },
+            { label: 'html', value: 8 },
+            { label: 'c++', value: 4 },
+        ];
+        /**
+         * value.返回的是d，生成带有角度信息的数据
+         */
+        const pieData = d3.pie()
+            .value(function(d) {
+                // 默认为return d
+                return d.value;     
+            })(dataset);
+
+        console.log(pieData);
+        // 生成一个颜色映射表（dataset 每一个数据对应一个颜色）
+        const scale = d3.scaleOrdinal()
+            .domain(dataset)
+            .range(d3.schemePaired);
+
+        // 弧形生成器
+        const arc = d3.arc()
+            .innerRadius(0)
+            .outerRadius(100); 
+
+
+        let endPos=[];//记录线条最外侧
+
+        // 最外层指向文字说明的线段
+        g.append('g')
+            .attr('class','line')
+            .selectAll('polyline')
+            .data(pieData)
+            .enter()
+            .append('polyline')
+            .attr('points', function(d, i) {
+                let smallArcMiddle = arc.centroid(d);
+                let x1=smallArcMiddle[0]*2,
+                    y1=smallArcMiddle[1]*2;
+                let middleAngle=getMidAngle(d);
+                let x2=x1*1.2,
+                        y2=y1*1.2;
+                endPos[i]=[x2,y2];//保存位置信息
+                return `${x1},${y1} ${x2},${y2}`;
+            })
+            .attr('fill','none').attr('stroke',function(d,i){
+                return '#333'
+            });
+
+
+        function getMidAngle(d) {
+            return (d.endAngle + d.startAngle) / 2;
+        }
+        g.append('g')
+            .attr('class','text')
+            .selectAll('text')
+            .data(pieData)
+            .enter()
+            .append('text')
+            .text(function(d,i){
+                return d.data.label;
+            })
+            .attr('transform',function(d,i){
+                let middleAngle=getMidAngle(d);
+                let x=endPos[i][0]+(middleAngle>Math.PI?-5:5),
+                        y=endPos[i][1];
+                return `translate(${x},${y})`;
+            })
+            .attr('text-anchor',function(d,i){
+                let middleAngle=getMidAngle(d);
+                return middleAngle>Math.PI?'end':'start'
+            })
+
+
+        const bigArc=d3.arc().innerRadius(0).outerRadius(120);//放大效果
+
+        g.selectAll('path').data(pieData).enter().append('path').attr('d',function(d,i){
+            return arc(d);
+        }).attr('fill',function(d,i){
+            return scale(i);
+        })
+        .text(function(d) {
+            return d.label;
+        })
+        .on('mouseenter',function(d,i){
+            d3.select(this).transition().duration(200).attr('d', bigArc(d))
+        })
+        .on('mouseleave',function(d,i){
+            d3.select(this).transition().duration(200).attr('d',arc(d))
+        });
+    </script>
+
+</body>
+</html>
