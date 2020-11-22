@@ -16,7 +16,7 @@
             // 不进行这块
             .attr('transform', `translate(160, 160)`);
         const dataset = [
-            { label: 'js', value: 10 },
+            { label: 'js', value: 100 },
             { label: 'css', value: 6 },
             { label: 'html', value: 8 },
             { label: 'c++', value: 4 },
@@ -44,7 +44,7 @@
 
         let endPos=[];//记录线条最外侧
 
-        // 最外层指向文字说明的线段
+        // 最外层指向文字说明的线段 
         g.append('g')
             .attr('class','line')
             .selectAll('polyline')
@@ -52,23 +52,33 @@
             .enter()
             .append('polyline')
             .attr('points', function(d, i) {
+
+                console.log('poly', d)
+
+                // 计算弧形的中间点
                 let smallArcMiddle = arc.centroid(d);
-                let x1=smallArcMiddle[0]*2,
-                    y1=smallArcMiddle[1]*2;
-                let middleAngle=getMidAngle(d);
-                let x2=x1*1.2,
-                        y2=y1*1.2;
-                endPos[i]=[x2,y2];//保存位置信息
+
+                console.log('smallArcMiddle', smallArcMiddle)
+
+                let x1 = smallArcMiddle[0],
+                    y1 = smallArcMiddle[1];
+
+                // let middleAngle = getMidAngle(d);
+                // 因为设置了偏移，所以原点在圆心哪里
+                let x2 = x1 * 2.4,
+                    y2 = y1 * 2.4;
+                endPos[i] = [x2, y2];//保存位置信息
                 return `${x1},${y1} ${x2},${y2}`;
             })
             .attr('fill','none').attr('stroke',function(d,i){
-                return '#333'
+                return 'red'
             });
 
 
         function getMidAngle(d) {
             return (d.endAngle + d.startAngle) / 2;
         }
+        
         g.append('g')
             .attr('class','text')
             .selectAll('text')
@@ -79,33 +89,35 @@
                 return d.data.label;
             })
             .attr('transform',function(d,i){
-                let middleAngle=getMidAngle(d);
-                let x=endPos[i][0]+(middleAngle>Math.PI?-5:5),
-                        y=endPos[i][1];
+                let middleAngle = getMidAngle(d);
+                let x = endPos[i][0],
+                    y=endPos[i][1];
                 return `translate(${x},${y})`;
             })
-            .attr('text-anchor',function(d,i){
-                let middleAngle=getMidAngle(d);
-                return middleAngle>Math.PI?'end':'start'
-            })
-
-
+           
         const bigArc=d3.arc().innerRadius(0).outerRadius(120);//放大效果
 
-        g.selectAll('path').data(pieData).enter().append('path').attr('d',function(d,i){
-            return arc(d);
-        }).attr('fill',function(d,i){
-            return scale(i);
-        })
-        .text(function(d) {
-            return d.label;
-        })
-        .on('mouseenter',function(d,i){
-            d3.select(this).transition().duration(200).attr('d', bigArc(d))
-        })
-        .on('mouseleave',function(d,i){
-            d3.select(this).transition().duration(200).attr('d',arc(d))
-        });
+        g.selectAll('path')
+            .data(pieData)
+            .enter()
+            .append('path')
+            .attr('d',function(d,i){
+                return arc(d);
+            })
+            .attr('fill',function(d,i){
+                return scale(i);
+            })
+
+            .attr('opacity', '0.5')
+            .text(function(d) {
+                return d.label;
+            })
+            .on('mouseenter',function(d,i){
+                d3.select(this).transition().duration(200).attr('d', bigArc(d))
+            })
+            .on('mouseleave',function(d,i){
+                d3.select(this).transition().duration(200).attr('d',arc(d))
+            });
     </script>
 
 </body>
