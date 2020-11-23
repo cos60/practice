@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="../d3.min.js"></script>
+    <title>selection</title>
+    
+</head>
+<body>
+
+    <div class="selection">
+        <!-- <h1 title='title tips1'>this is title1</h1>
+        <h1 title='title tips2'>this is title2</h1> -->
+        <!-- <p>1</p>
+        <p>2</p>
+        <p>3</p>
+        <p>4</p> -->
+        <script>
+            /** d3-selection */
+            // select 只会选择一个
+            // const h1 = d3.select('h1');
+            // console.log(h1);
+
+
+    
+            // selectAll 选择全部
+            // const h1s = d3.selectAll('h1');
+            // console.log(h1s);
+
+
+
+            // attr 获取、设置属性
+            // const attr1 = h1.attr('title');
+            // console.log('attr1', attr1)
+            // const attr2 = h1s.attr('title', function(d, i) {
+            //     console.log('attr2', d3.select(this).attr('title'))
+            // })
+            
+
+            // h1.style('color', '#e2e2e2')
+            // h1s.style('color', function() {
+            //     return 'red'
+            // })
+
+
+            // enter or exit  https://www.d3js.org.cn/#enter%E5%92%8Cexit%E6%93%8D%E4%BD%9C
+            // const dataset = [1111,3222,1114,53323,62323,7230];
+            // d3.selectAll('p')
+            //     .data(dataset)
+            //     .enter()
+            //     .append('h2')
+            //     .text(function(d, i) {
+            //         return d
+            //     } );
+
+
+            // const dataset = [3333, 5555];
+            // d3.selectAll('p')
+            //     .data(dataset)
+            //     .exit()
+            //     .text(function(d, i) {
+            //         return d
+            //     })
+
+
+            
+        </script>
+    </div>
+
+</body>
+</html>

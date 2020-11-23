@@ -5,33 +5,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- <script type="text/javascript" src="http://d3js.org/d3.v5.min.js"></script> -->
     <script type="text/javascript" src="../d3.min.js"></script>
-    <title>Document</title>
+    <title>柱状图</title>
 </head>
 <body>
-    <svg></svg>
+    <svg width='600' height='400'></svg>
     <script>
 
         const svg = d3.select('svg')
-            .attr('width',600)
-            .attr('height',600);
-        const g = svg.append('g');
+
+        const size = {
+            width: svg.attr('width'),
+            height: svg.attr('height'),
+            rectWidth: 30
+        }
+
+        const position = {
+            top: 100,
+            left: 100,
+            padding: 30
+        }
+
+        const g = svg.append('g')
+            .attr('transform', `translate(${position.left}, ${position.top})`)
+
         const dataset=[10, 20, 30, 23, 13, 40, 27, 35, 20];
 
         // scaleBand 分段比例尺， 划分为均匀的分段
         const xScale = d3.scaleBand()
-            // 第一个元素对应第一个分段，第二个元素对应第二个分段，以此类推
-            // d3.range(dataset.length) 会生成一个从0 到 dataset.length 的数组
             .domain(d3.range(dataset.length))
             // 0 到 500 映射到 0 到 8
-            .range([0,500]),
-        yScale=d3.scaleLinear()
-            .domain([0,d3.max(dataset)])
-            // y越小， 值越大
-            .range([300,0]);
-        
-        console.log('d3.range', d3.range(dataset.length))
+            .range([0, size.height]);
 
-        // console.log('xScale', xScale(4))
+        const yScale= d3.scaleLinear()
+            .domain([0,d3.max(dataset)])
+            .range([size.height - position.top - position.padding, 0]) // 反向
+
         const xAxis=d3.axisBottom(xScale),
               yAxis=d3.axisLeft(yScale);
 
@@ -40,10 +48,10 @@
         // console.log(g.append('g').attr('transform','translate(100,350)').call(xAxis))
 
         // 将刻度尺添加在分组上
-        g.append('g').attr('transform','translate(100,350)').call(xAxis);
-        g.append('g').attr('transform','translate(100,50)').call(yAxis);
-
-        const rectWidth = 30;
+        g.append('g')
+            .attr('transform', `translate(0, ${size.height - position.top - position.padding})`)
+            .call(xAxis);
+        g.append('g').call(yAxis);
         
         g.append('g')
             .selectAll('rect')
@@ -51,14 +59,12 @@
             .enter()
             .append('rect')
             .attr('x',function(d,i){
-                return xScale(i) + 100 + (xScale(1) / 2) - rectWidth / 2;
+                return xScale(i) + (xScale(1) / 2) - size.rectWidth / 2;
             })
             // 一开始所有的柱状图形都在x轴线上
-            .attr('y',function(d,i){
-                return 350;
-            })
+            .attr('y', size.height - position.top - position.padding)
             .attr('width',function(d,i){
-                return rectWidth;
+                return size.rectWidth;
             })
             // 填充颜色
             .attr('fill','blue')
@@ -75,15 +81,29 @@
             .duration(1000)
             // 延迟执行
             .delay(function(d,i){
-                return 100*i;
+                return 100 * i;
             })
             // 
             .attr('height',function(d,i){
-                return 300-yScale(d);
+                return size.height - yScale(d) - position.top - position.padding;;
             })
             .attr('y',function(d,i){
-                // 50 因为y轴向下移动了50， 所以需要 +50 补回去0
-                return yScale(d)+ 50;
+                return yScale(d);
+            })
+
+        g.append('g')
+            .selectAll('text')
+            .data(dataset)
+            .enter()
+            .append('text')
+            .attr('x', function(d, i) {
+                return xScale(i)
+            })
+            .attr('y', function(d, i) {
+                return yScale(d)
+            })
+            .text(function(d) {
+                return d
             })
     </script>
     
