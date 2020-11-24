@@ -62,6 +62,7 @@
             })
             
             .curve(d3.curveNatural) //https://www.d3js.org.cn/document/d3-shape/#curves
+            
         // console.log('line(dataset)', line(dataset))
         // 绘制线段
         const linePathData = line(dataset);
@@ -69,6 +70,8 @@
             .attr('d', linePathData)
             .attr('stroke','black')
             .attr('fill','none');
+
+            
         // 绘制圆点 cx,cy,r 原点和半径
         g.append('g')
             .selectAll('circle')
