@@ -8,34 +8,37 @@
     <title>柱状图</title>
 </head>
 <body>
+    <!-- 准备好画布 -->
     <svg width='600' height='400'></svg>
-    <script>
 
+    <script>
         const svg = d3.select('svg')
 
         const size = {
             width: svg.attr('width'),
             height: svg.attr('height'),
+            // 预设矩形宽度
             rectWidth: 30
         }
-
+        // 预设图形位置信息
         const position = {
             top: 100,
             left: 100,
             padding: 30
         }
+        // 数据
+        const dataset=[10, 20, 30, 23, 13, 41, 27, 35, 20];
 
         const g = svg.append('g')
             .attr('transform', `translate(${position.left}, ${position.top})`)
 
-        const dataset=[10, 20, 30, 23, 13, 40, 27, 35, 20];
-
-        // scaleBand 分段比例尺， 划分为均匀的分段
+       
+        // scaleBand 分段比例尺， 划分为均匀的分段 https://www.d3js.org.cn/document/d3-scale/#ordinal-scales
         const xScale = d3.scaleBand()
-            .domain(d3.range(dataset.length))
-            // 0 到 500 映射到 0 到 8
-            .range([0, size.height]);
+            .domain(d3.range(dataset.length)) // [0,1,2,3,...] 必须连续
+            .range([0, size.width - position.left]);
 
+        // 线性比例尺 https://www.d3js.org.cn/document/d3-scale/#linear-scales
         const yScale= d3.scaleLinear()
             .domain([0,d3.max(dataset)])
             .range([size.height - position.top - position.padding, 0]) // 反向
@@ -43,9 +46,6 @@
         const xAxis=d3.axisBottom(xScale),
               yAxis=d3.axisLeft(yScale);
 
-        console.log(xAxis, yAxis)
-
-        // console.log(g.append('g').attr('transform','translate(100,350)').call(xAxis))
 
         // 将刻度尺添加在分组上
         g.append('g')
@@ -91,6 +91,7 @@
                 return yScale(d);
             })
 
+        // 添加文字
         g.append('g')
             .selectAll('text')
             .data(dataset)

@@ -51,7 +51,7 @@
         
             .call(yAxis);
         
-        // line 生成器, 生成绘制线段所需要的数据。
+        // line 生成器, 生成绘制线段所需要的数据。 https://www.d3js.org.cn/document/d3-shape/#lines
         const line = d3.line()
             .x(function(d,i){
                 // xScale(1) / 2 需要坐落在坐标点上
@@ -60,6 +60,8 @@
             .y(function(d,i){
                 return yScale(d);
             })
+            
+            .curve(d3.curveNatural) //https://www.d3js.org.cn/document/d3-shape/#curves
         // console.log('line(dataset)', line(dataset))
         // 绘制线段
         const linePathData = line(dataset);
@@ -96,7 +98,6 @@
             .text(function(d,i){
                 return d;
             })
-
         
     </script>
     
